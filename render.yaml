@@ -1,0 +1,8 @@
+# render.yaml
+services:
+  - type: web
+    name: my-flask-app
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: gunicorn app:app --bind 0.0.0.0:10000
