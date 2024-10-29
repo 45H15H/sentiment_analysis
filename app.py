@@ -4,7 +4,7 @@ from textblob import TextBlob
 
 app = Flask(__name__)
 
-@app.route('/analyze-sentiment', methods=['POST'])
+@app.route('/', methods=['POST'])
 def analyze_sentiment():
     data = request.json
     if 'text' not in data:
@@ -22,4 +22,4 @@ def analyze_sentiment():
     })
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run()
