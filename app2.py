@@ -7,7 +7,7 @@ from email.parser import BytesParser
 
 app2 = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+@app2.route('/', methods=['POST'])
 def analyze_sentiment():
     if 'file' not in request.files:
         return jsonify({"error": "No file provided"}), 400
@@ -38,4 +38,4 @@ def analyze_sentiment():
     })
 
 if __name__ == "__main__":
-    app.run()
+    app2.run()
