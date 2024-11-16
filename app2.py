@@ -5,7 +5,7 @@ import email
 from email import policy
 from email.parser import BytesParser
 
-app = Flask(__name__)
+app2 = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def analyze_sentiment():
