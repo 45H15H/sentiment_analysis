@@ -32,7 +32,6 @@ def analyze_sentiment():
     sentiment = "Positive" if sentiment_score > 0 else "Negative" if sentiment_score < 0 else "Neutral"
 
     return jsonify({
-        "text": text,
         "sentiment": sentiment,
         "score": sentiment_score
     })
