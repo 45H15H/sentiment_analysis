@@ -6,11 +6,12 @@ from email import policy
 from email.parser import BytesParser
 import google.generativeai as genai
 import json
+import os
 
 app3 = Flask(__name__)
 
 # Configure Gemini API with direct API key
-GOOGLE_API_KEY = "AIzaSyAh2OjBYiM5rsIc-rGiTUSQuBl-xAeYWpA"  # Replace with your actual API key
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
