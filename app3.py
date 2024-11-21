@@ -17,7 +17,7 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 def extract_details_with_gemini(text):
     prompt = f"""
-    Extract these details from the email text and return as JSON:
+    Extract these details from the email text and return as JSON with JSON syntax:
     - customer_name
     - order_id (if available)
     - feedback_category (must be: compliments/suggestions/queries/complaints)
