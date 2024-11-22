@@ -6,7 +6,7 @@ from email import policy
 from email.parser import BytesParser
 import google.generativeai as genai
 import json
-import os
+from datetime import datetime
 import re
 
 app3 = Flask(__name__)
@@ -51,12 +51,19 @@ def extract_details_from_eml(msg):
     customer_email = email_match.group(1) if email_match else from_header
 
     # Extract date and time of the email
-    date = msg.get('date')
+    date_str = msg.get('date')
+    try:
+        # Parse the email date string
+        date_obj = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
+        # Format to show only the date
+        formatted_date = date_obj.strftime('%Y-%m-%d')
+    except:
+        formatted_date = date_str  # Fallback to original date string if parsing fails
 
     return {
         "subject": subject,
         "customer_email": customer_email,
-        "date": date
+        "date": formatted_date
     }
 
 @app3.route('/', methods=['POST'])
