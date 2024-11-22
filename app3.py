@@ -11,13 +11,13 @@ import os
 app3 = Flask(__name__)
 
 # Configure Gemini API with direct API key
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+GOOGLE_API_KEY = "AIzaSyAh2OjBYiM5rsIc-rGiTUSQuBl-xAeYWpA"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 def extract_details_with_gemini(text):
     prompt = f"""
-    Extract these details from the email text and return as JSON with JSON syntax:
+    Extract these details from the email text and return as JSON with JSON syntax (Don't use triple quotes, just return the JSON object as a string):
     - customer_name
     - order_id (if available)
     - feedback_category (must be: compliments/suggestions/queries/complaints)
