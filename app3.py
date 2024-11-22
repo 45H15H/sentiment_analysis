@@ -31,7 +31,6 @@ def extract_details_with_gemini(text):
     """
     
     response = model.generate_content(prompt)
-    print(response.text)
     try:
         return json.loads(response.text)
     except:
