@@ -20,7 +20,7 @@ def extract_details_with_gemini(text):
     Extract these details from the email text and return as JSON with JSON syntax (Don't use triple quotes, just return the JSON object as a string):
     - customer_name
     - order_id (if available)
-    - feedback_category (must be: compliments/suggestions/queries/complaints)
+    - feedback_category (must be: compliments/suggestions/queries/complaints/other)
     
     Email: {text}
     """
