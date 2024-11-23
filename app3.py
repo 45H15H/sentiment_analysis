@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask, request, jsonify
 from textblob import TextBlob
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import email
 from email import policy
 from email.parser import BytesParser
@@ -85,10 +86,30 @@ def analyze_sentiment():
     else:
         text = msg.get_payload(decode=True).decode(msg.get_content_charset())
 
-    # Get sentiment
+    # Get sentiment using both TextBlob and VADER
+    # TextBlob analysis
     blob = TextBlob(text)
-    sentiment_score = blob.sentiment.polarity
-    sentiment = "Positive" if sentiment_score > 0 else "Negative" if sentiment_score < 0 else "Neutral"
+    tb_score = blob.sentiment.polarity
+    
+    # VADER analysis
+    analyzer = SentimentIntensityAnalyzer()
+    vader_scores = analyzer.polarity_scores(text)
+    compound_score = vader_scores['compound']
+    
+    # Combine scores for more accurate results
+    final_score = (tb_score + compound_score) / 2
+    
+    # More granular sentiment classification
+    if final_score >= 0.5:
+        sentiment = "Very Positive"
+    elif 0.1 <= final_score < 0.5:
+        sentiment = "Moderately Positive"
+    elif -0.1 < final_score < 0.1:
+        sentiment = "Neutral"
+    elif -0.5 <= final_score <= -0.1:
+        sentiment = "Moderately Negative"
+    else:
+        sentiment = "Very Negative"
 
     # Get extracted details
     extracted = extract_details_with_gemini(text)
@@ -96,7 +117,7 @@ def analyze_sentiment():
     # Combined flat JSON response
     return jsonify({
         "sentiment": sentiment,
-        "score": sentiment_score,
+        "score": final_score,
         "customer_name": extracted.get("customer_name"),
         "order_id": extracted.get("order_id"),
         "feedback_category": extracted.get("feedback_category"),
