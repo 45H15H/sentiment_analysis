@@ -10,6 +10,73 @@ import json
 from datetime import datetime
 import re
 
+import re
+import logging
+import spacy
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+
+# Load the SpaCy model
+nlp = spacy.load("en_core_web_sm")
+
+def preprocess(text):
+    """
+    Use SpaCy for tokenization and lemmatization.
+    """
+    doc = nlp(text.lower())
+    return [token.lemma_ for token in doc if not token.is_punct and not token.is_space]
+
+def is_customer_feedback(subject, text):
+    """
+    Check if the email is a customer feedback email based on subject and content.
+    Returns: bool
+    """
+    # Keywords that indicate customer feedback
+    feedback_keywords = [
+        r'\bfeedback\b', r'\bcomplaint\b', r'\breview\b', r'\bexperience\b',
+        r'\bsuggestion\b', r'\bissue\b', r'\bproblem\b', r'\bconcern\b',
+        r'\bdissatisfied\b', r'\bsatisfied\b', r'\brating\b'
+    ]
+
+    # Keywords that indicate non-customer feedback emails
+    exclude_keywords = [
+        r'\border confirmation\b', r'\bshipping update\b', r'\bnewsletter\b',
+        r'\bpromotion\b', r'\bdeal\b', r'\boffer\b', r'\bsubscription\b',
+        r'\bpassword\b', r'\breceipt\b', r'\binvoice\b', r'\bmarketing\b', r'\badvertisement\b'
+    ]
+
+    # Preprocess the subject and text
+    subject_tokens = preprocess(subject)
+    text_tokens = preprocess(text)
+
+    # Combine tokens back into strings for regex matching
+    processed_subject = " ".join(subject_tokens)
+    processed_text = " ".join(text_tokens)
+
+    # Check for feedback keywords
+    has_feedback_keywords = any(
+        re.search(keyword, processed_subject) or re.search(keyword, processed_text)
+        for keyword in feedback_keywords
+    )
+
+    # Check for exclusion keywords
+    has_exclude_keywords = any(
+        re.search(keyword, processed_subject) or re.search(keyword, processed_text)
+        for keyword in exclude_keywords
+    )
+
+    # Prioritize feedback keywords over exclusion keywords
+    if has_feedback_keywords and has_exclude_keywords:
+        logging.info("Both feedback and exclusion keywords found. Prioritizing feedback.")
+        return True
+
+    # Log the decision
+    logging.info(f"Subject: {subject}, Feedback: {has_feedback_keywords}, Exclude: {has_exclude_keywords}")
+
+    return has_feedback_keywords and not has_exclude_keywords
+
+
 app3 = Flask(__name__)
 
 # Configure Gemini API with direct API key
@@ -76,6 +143,8 @@ def analyze_sentiment():
         return jsonify({"error": "Invalid file type"}), 400
 
     msg = BytesParser(policy=policy.default).parse(file.stream)
+    subject = msg.get('subject', '')
+
     if msg.is_multipart():
         for part in msg.iter_parts():
             if part.get_content_type() == 'text/plain':
@@ -85,6 +154,13 @@ def analyze_sentiment():
             return jsonify({"error": "No text/plain part found in the email"}), 400
     else:
         text = msg.get_payload(decode=True).decode(msg.get_content_charset())
+
+    # Check if this is a customer feedback email
+    if not is_customer_feedback(subject, text):
+        return jsonify({
+            "error": "Not a customer feedback email",
+            "subject": subject
+        }), 400
 
     # Get sentiment using both TextBlob and VADER
     # TextBlob analysis
