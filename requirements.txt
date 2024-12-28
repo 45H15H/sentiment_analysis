@@ -12,7 +12,9 @@ confection==0.1.5
 cymem==2.0.10
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl#sha256=1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85
 et_xmlfile==2.0.0
+filelock==3.16.1
 Flask==3.0.3
+fsspec==2024.10.0
 google-ai-generativelanguage==0.6.10
 google-api-core==2.23.0
 google-api-python-client==2.154.0
@@ -24,6 +26,7 @@ grpcio==1.68.0
 grpcio-status==1.68.0
 gunicorn==23.0.0
 httplib2==0.22.0
+huggingface-hub==0.26.5
 idna==3.10
 itsdangerous==2.2.0
 Jinja2==3.1.4
@@ -35,7 +38,7 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
 murmurhash==1.0.11
-nltk==3.9.1
+NRCLex==3.0.0
 numpy==2.0.2
 openpyxl==3.1.5
 packaging==24.1
@@ -51,10 +54,12 @@ Pygments==2.18.0
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
 pytz==2024.2
+PyYAML==6.0.2
 regex==2024.9.11
 requests==2.32.3
 rich==13.9.4
 rsa==4.9
+safetensors==0.4.5
 setuptools==75.6.0
 shellingham==1.5.4
 six==1.16.0
@@ -65,6 +70,7 @@ spacy-loggers==1.0.5
 srsly==2.5.0
 textblob==0.18.0.post0
 thinc==8.3.2
+tokenizers==0.21.0
 tqdm==4.66.6
 typer==0.15.1
 typing_extensions==4.12.2
