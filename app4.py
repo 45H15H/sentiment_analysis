@@ -78,7 +78,7 @@ def is_customer_feedback(subject, text):
 app4 = Flask(__name__)
 
 # Configure Gemini API with direct API key
-GOOGLE_API_KEY = "AIzaSyAcxV7BCseOR4kSyebWIM2c3T9r8R7TDuc"
+GOOGLE_API_KEY = ""
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
